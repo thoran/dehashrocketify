@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 # dehashrocketify
 
-# 20171123
-# 0.6.0
+# 20171211
+# 0.7.0
 
-# Changes since 0.5:
-# 1. Added support for .rake files.
+# Changes since 0.6:
+# 1. Tests!
 
 def ruby_filenames
   if ARGV[0]
