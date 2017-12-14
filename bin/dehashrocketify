@@ -1,8 +1,11 @@
 #!/usr/bin/env ruby
 # dehashrocketify
 
-# 20150206
-# 0.1.0
+# 20150212
+# 0.2.0
+
+# Changes since 0.1:
+# 1. It no longer matches code of the form Module::Class => e, such as in rescues.
 
 def input_filenames
   if ARGV[0]
@@ -25,7 +28,7 @@ end
 def main
   ruby_filenames.each do |ruby_filename|
     contents = File.read(ruby_filename)
-    new_contents = contents.gsub(/\:(\w+) *=>/, "\\1:")
+    new_contents = contents.gsub(/([^\:])\:(\w+) *=>/, "\\1\\2:")
     File.write(ruby_filename, new_contents)
   end
 end
