@@ -1,21 +1,33 @@
 #!/usr/bin/env ruby
 # dehashrocketify
 
-# 20131001
-# 0.0.0
+# 20150206
+# 0.1.0
 
-input_filenames = (
-  if !ARGV[0].nil?
-    Dir[ARGV[0]]
+def input_filenames
+  if ARGV[0]
+    if File.directory?(ARGV[0])
+      Dir["#{ARGV[0]}/**/*.rb"]
+    else
+      Dir[ARGV[0]]
+    end
   else
-    Dir['*']
+    Dir['*.rb']
   end
-)
-
-input_filenames.reject!{|input_filename| File.directory?(input_filename)}
-
-input_filenames.each do |input_filename|
-  contents = File.read(input_filename)
-  new_contents = contents.gsub(/\:(\w+) *=>/, "\\1:")
-  File.write(input_filename, new_contents)
 end
+
+def ruby_filenames
+  input_filenames.reject do |input_filename|
+    File.directory?(input_filename)
+  end
+end
+
+def main
+  ruby_filenames.each do |ruby_filename|
+    contents = File.read(ruby_filename)
+    new_contents = contents.gsub(/\:(\w+) *=>/, "\\1:")
+    File.write(ruby_filename, new_contents)
+  end
+end
+
+main if __FILE__ == $0
