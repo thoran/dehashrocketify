@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# dehashrocketify
+
+# 20131001
+# 0.0.0
+
+input_filenames = (
+  if !ARGV[0].nil?
+    Dir[ARGV[0]]
+  else
+    Dir['*']
+  end
+)
+
+input_filenames.reject!{|input_filename| File.directory?(input_filename)}
+
+input_filenames.each do |input_filename|
+  contents = File.read(input_filename)
+  new_contents = contents.gsub(/\:(\w+) *=>/, "\\1:")
+  File.write(input_filename, new_contents)
+end
