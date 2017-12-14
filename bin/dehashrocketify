@@ -2,13 +2,15 @@
 # dehashrocketify
 
 # 20171123
-# 0.3.0
+# 0.4.0
 
-# Changes since 0.2:
-# 1. Added support for .erb and .rabl files.
-# 2. Outputs the file under consideration.
+# Changes since 0.3:
+# 1. The check for whether one of the files is a directory should be unnecessary, since a directory with those extensions would be very rare!
+# 2. If there's no argument supplied it will behave the same as if '.' was supplied.
+# 3. There's now a check for whether the file contents contains a hashrocket before rewriting it.
+# 4. Only those files which are rewritten are displayed now also.
 
-def input_filenames
+def ruby_filenames
   if ARGV[0]
     if File.directory?(ARGV[0])
       Dir.glob("#{ARGV[0]}/**/*.{erb,rb,rabl}")
@@ -16,22 +18,18 @@ def input_filenames
       Dir[ARGV[0]]
     end
   else
-    Dir['*.{erb,rb,rabl}']
-  end
-end
-
-def ruby_filenames
-  input_filenames.reject do |input_filename|
-    File.directory?(input_filename)
+    Dir.glob("./**/*.{erb,rb,rabl}")
   end
 end
 
 def main
   ruby_filenames.each do |ruby_filename|
-    puts ruby_filename
     contents = File.read(ruby_filename)
-    new_contents = contents.gsub(/([^\:])\:(\w+) *=>/, "\\1\\2:")
-    File.write(ruby_filename, new_contents)
+    if contents =~ /([^\:])\:(\w+) *=>/
+      puts ruby_filename
+      new_contents = contents.gsub(/([^\:])\:(\w+) *=>/, "\\1\\2:")
+      File.write(ruby_filename, new_contents)
+    end
   end
 end
 
