@@ -2,20 +2,20 @@
 # dehashrocketify
 
 # 20171123
-# 0.5.0
+# 0.6.0
 
-# Changes since 0.4:
-# 1. It wasn't handling symbols which end in '?' or '!'.
+# Changes since 0.5:
+# 1. Added support for .rake files.
 
 def ruby_filenames
   if ARGV[0]
     if File.directory?(ARGV[0])
-      Dir.glob("#{ARGV[0]}/**/*.{erb,rb,rabl}")
+      Dir.glob("#{ARGV[0]}/**/*.{erb,rb,rabl,rake}")
     else
       Dir[ARGV[0]]
     end
   else
-    Dir.glob("./**/*.{erb,rb,rabl}")
+    Dir.glob("./**/*.{erb,rb,rabl,rake}")
   end
 end
 
