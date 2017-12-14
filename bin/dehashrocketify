@@ -1,21 +1,22 @@
 #!/usr/bin/env ruby
 # dehashrocketify
 
-# 20150212
-# 0.2.0
+# 20171123
+# 0.3.0
 
-# Changes since 0.1:
-# 1. It no longer matches code of the form Module::Class => e, such as in rescues.
+# Changes since 0.2:
+# 1. Added support for .erb and .rabl files.
+# 2. Outputs the file under consideration.
 
 def input_filenames
   if ARGV[0]
     if File.directory?(ARGV[0])
-      Dir["#{ARGV[0]}/**/*.rb"]
+      Dir.glob("#{ARGV[0]}/**/*.{erb,rb,rabl}")
     else
       Dir[ARGV[0]]
     end
   else
-    Dir['*.rb']
+    Dir['*.{erb,rb,rabl}']
   end
 end
 
@@ -27,10 +28,11 @@ end
 
 def main
   ruby_filenames.each do |ruby_filename|
+    puts ruby_filename
     contents = File.read(ruby_filename)
     new_contents = contents.gsub(/([^\:])\:(\w+) *=>/, "\\1\\2:")
     File.write(ruby_filename, new_contents)
   end
 end
 
-main if __FILE__ == $0
+main
