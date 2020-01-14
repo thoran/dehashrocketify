@@ -1,11 +1,17 @@
 #!/usr/bin/env ruby
 # dehashrocketify
 
-# 20171211
-# 0.7.0
+# 20200114
+# 0.8.0
 
-# Changes since 0.6:
-# 1. Tests!
+# Changes since 0.7:
+# 1. Can now handle symbols of the following form... :\w_\w.
+# 2. Can now also handle (weird edge case) symbols of the following forms:
+#   i. :"\w+"
+#   ii. :'\w+'
+#   iii. :"\w+_\w+"
+#   iv. :"\w+-\w+"
+# 3. + Gemfile and Gemfile.lock.
 
 def ruby_filenames
   if ARGV[0]
@@ -20,11 +26,11 @@ def ruby_filenames
 end
 
 def main
+  regex = /([^\:])\:(["']*[\w_-]+[?!]*["']*) *=>/
   ruby_filenames.each do |ruby_filename|
     contents = File.read(ruby_filename)
-    if contents =~ /([^\:])\:(\w+[?!]*) *=>/
-      puts ruby_filename
-      new_contents = contents.gsub(/([^\:])\:(\w+[?!]*) *=>/, "\\1\\2:")
+    if contents =~ regex
+      new_contents = contents.gsub(regex, "\\1\\2:")
       File.write(ruby_filename, new_contents)
     end
   end
