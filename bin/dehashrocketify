@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 # dehashrocketify
 
-# 20230330
-# 0.9.2
+# 20230331
+# 0.9.3
 
 # Changes since 0.8:
 # 1. Accommodates weird patterns like: condition ? :first : :last => {}.
@@ -10,6 +10,12 @@
 # 2. Fix {:key => value} case.
 # 1/2
 # 3. Fix (:key => value) case.
+# 2/3
+# 4. Fix ,:key => (Comma immediately in front of the colon.) case.
+# 5. Added tests for {:key=>value} case
+# 6. Added tests for { :key=>value } case.
+# 7. Added tests for (:key=>value) case.
+# 8. Added tests for ( :key=>value ) case.
 
 def ruby_filenames
   if ARGV[0]
@@ -24,7 +30,7 @@ def ruby_filenames
 end
 
 def main
-  regex = /({|\( *|[^\:] +)\:(["']*[\w_-]+[?!]*["']*) *=>/
+  regex = /({|\( *|[^\:] +|,)\:(["']*[\w_-]+[?!]*["']*) *=>/
   ruby_filenames.each do |ruby_filename|
     contents = File.read(ruby_filename)
     if contents =~ regex
