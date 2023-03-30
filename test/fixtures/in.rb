@@ -12,3 +12,5 @@
 }
 
 SomeKindOf::Error => e
+
+condition ? :first : :last => {}
