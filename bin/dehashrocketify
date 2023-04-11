@@ -1,36 +1,31 @@
 #!/usr/bin/env ruby
 # dehashrocketify
 
-# 20230331
-# 0.9.3
+# 20230411
+# 0.10.0
 
-# Changes since 0.8:
-# 1. Accommodates weird patterns like: condition ? :first : :last => {}.
-# 0/1
-# 2. Fix {:key => value} case.
-# 1/2
-# 3. Fix (:key => value) case.
-# 2/3
-# 4. Fix ,:key => (Comma immediately in front of the colon.) case.
-# 5. Added tests for {:key=>value} case
-# 6. Added tests for { :key=>value } case.
-# 7. Added tests for (:key=>value) case.
-# 8. Added tests for ( :key=>value ) case.
+# Changes since 0.9:
+# 1. ~ ruby_Filenames(): Include Rakefiles and Gemfiles.
+# 2. Handle interpolated keys of the form {:"interpolated_#{string}" => 1}.
 
 def ruby_filenames
   if ARGV[0]
     if File.directory?(ARGV[0])
-      Dir.glob("#{ARGV[0]}/**/*.{erb,rb,rabl,rake}")
+      Dir.glob("#{ARGV[0]}/**/*.{erb,rb,rabl,rake}")\
+        + Dir.glob("#{ARGV[0]}/**/Rakefile")\
+        + Dir.glob("#{ARGV[0]}/**/Gemfile")
     else
       Dir[ARGV[0]]
     end
   else
-    Dir.glob("./**/*.{erb,rb,rabl,rake}")
+    Dir.glob("./**/*.{erb,rb,rabl,rake}")\
+      + Dir.glob("./**/Rakefile")\
+      + Dir.glob("./**/Gemfile")
   end
 end
 
 def main
-  regex = /({|\( *|[^\:] +|,)\:(["']*[\w_-]+[?!]*["']*) *=>/
+  regex = /({|\( *|[^\:] +|,)\:(["']*[\w_\-]+[#\{]*[\w_-]+[\(\w_\-\)]*[}]*[?!]*["']*) *=>/
   ruby_filenames.each do |ruby_filename|
     contents = File.read(ruby_filename)
     if contents =~ regex
