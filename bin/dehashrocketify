@@ -1,12 +1,11 @@
 #!/usr/bin/env ruby
 # dehashrocketify
 
-# 20230411
-# 0.10.0
+# 20230412
+# 0.11.0
 
-# Changes since 0.9:
-# 1. ~ ruby_Filenames(): Include Rakefiles and Gemfiles.
-# 2. Handle interpolated keys of the form {:"interpolated_#{string}" => 1}.
+# Changes since 0.10:
+# 1. Handle keys which are method calls and are of the form {a_method(:foo) => 1} by not touching them!
 
 def ruby_filenames
   if ARGV[0]
@@ -25,7 +24,7 @@ def ruby_filenames
 end
 
 def main
-  regex = /({|\( *|[^\:] +|,)\:(["']*[\w_\-]+[#\{]*[\w_-]+[\(\w_\-\)]*[}]*[?!]*["']*) *=>/
+  regex = /({|\( *|[^\:] +|,)\:(["']*[\w_\-]+([#\{]*[\w_-]+[\(\w_\-\)]*[\}])*[?!]*["']*) *=>/
   ruby_filenames.each do |ruby_filename|
     contents = File.read(ruby_filename)
     if contents =~ regex

@@ -101,3 +101,5 @@ condition ? :first : :last => {}
 
 {"interpolated_#{string}": 1}
 {"interpolated_string_#{with_a_method(and_an_argument)}": 2}
+
+{with_a_method(:foo) => 1}
