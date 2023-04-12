@@ -2,10 +2,12 @@
 # dehashrocketify
 
 # 20230412
-# 0.11.0
+# 0.11.1
 
 # Changes since 0.10:
 # 1. Handle keys which are method calls and are of the form {a_method(:foo) => 1} by not touching them!
+# 0/1
+# 2. Fix for the case where there's a method call inside the argument to a method call inside an interpolated string which is a symbol!
 
 def ruby_filenames
   if ARGV[0]
@@ -24,7 +26,7 @@ def ruby_filenames
 end
 
 def main
-  regex = /({|\( *|[^\:] +|,)\:(["']*[\w_\-]+([#\{]*[\w_-]+[\(\w_\-\)]*[\}])*[?!]*["']*) *=>/
+  regex = /({|\( *|[^\:] +|,)\:(["']*[\w_\-]+([#\{]*[\w_-]+[\(\w_\-\.\)]*[\}])*[?!]*["']*) *=>/
   ruby_filenames.each do |ruby_filename|
     contents = File.read(ruby_filename)
     if contents =~ regex
